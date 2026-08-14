@@ -188,7 +188,7 @@ export const EVENTOS = {
     nivel: "Todos los niveles",
     aforo: "Plazas limitadas",
     lede: "Un tardeo en la ría, la esterilla mirando al mar y música sonando hasta el late brunch",
-    descripcion: "Nos vamos de tardeo a la ría, junto al puente da Illa da Toxa: pilates al aire libre con la marea de fondo y un DJ set poniendo la música, y al acabar nos quedamos de late brunch viendo caer la tarde",
+    descripcion: "Nos vamos de tardeo a la ría, junto al puente da Illa da Toxa: pilates al aire libre con la marea de fondo y un DJ set acompañando la sesión, y al acabar nos quedamos de late brunch viendo caer la tarde",
     programa: "Pilates al atardecer · DJ set en directo · late brunch",
     ctaLabel: "+ Info por WhatsApp",
     reservaMsg: "Hola! Quiero más info del Tardeo Pilates (martes 18 de agosto)",
