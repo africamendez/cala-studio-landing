@@ -120,6 +120,14 @@ export const EVENT_CARDS = [
     poster: "assets/eventos/pilates-and-wine.png",
   },
   {
+    slug: "tardeo-pilates",
+    when: "Martes 18 de agosto",
+    name: "Tardeo Pilates",
+    place: "O Quinto Pino · Illa da Toxa",
+    desc: "Pilates al atardecer en la ría con DJ set en directo y late brunch para rematar",
+    poster: "assets/eventos/tardeo-pilates.png",
+  },
+  {
     proximamente: true,
     when: "Septiembre · 2026",
     desc: "Estamos cerrando la próxima fecha, te la contamos por aquí",
@@ -158,6 +166,34 @@ export const EVENTOS = {
     reservaMsg: "Hola! Quiero reservar plaza para Pilates & Wine (sábado 15 de agosto)",
     // Texto con el que se comparte la página (WhatsApp, Instagram, nativo)
     compartirMsg: "Pilates & Wine · sábado 15 de agosto entre viñas\nTe vienes?",
+  },
+
+  "tardeo-pilates": {
+    slug: "tardeo-pilates",
+    nombre: "Tardeo Pilates",
+    nombreEm: "Pilates",
+    eyebrow: "Evento de verano · cala × O Quinto Pino",
+    poster: "assets/eventos/tardeo-pilates.png",
+    // Azul atardecer del cartel — cielo y ría al caer la tarde
+    tema: {
+      accent:     "#54748E",
+      accentDeep: "#3E5A72",
+    },
+    cuando: "Martes 18 de agosto",
+    hora: "19:30h",
+    lugar: "O Quinto Pino, Illa da Toxa",
+    // Sin precio cerrado todavía: la cifra deja paso a un "por confirmar" y
+    // tanto la nota como el botón mandan a WhatsApp a pedir más info
+    precio: "Por confirmar",
+    precioNota: "consulta por WhatsApp",
+    nivel: "Todos los niveles",
+    aforo: "Plazas limitadas",
+    lede: "Un tardeo en la ría, la esterilla mirando al mar y música sonando hasta el late brunch",
+    descripcion: "El Tardeo Pilates lleva la clase fuera del estudio y la planta en la ría, junto al puente da Illa da Toxa, para movernos con la marea de fondo mientras un DJ set acompaña la sesión, y quedarnos después de late brunch viendo caer la tarde",
+    programa: "Pilates al atardecer · DJ set en directo · late brunch",
+    ctaLabel: "+ Info por WhatsApp",
+    reservaMsg: "Hola! Quiero más info del Tardeo Pilates (martes 18 de agosto)",
+    compartirMsg: "Tardeo Pilates · martes 18 de agosto en la Illa da Toxa\nDJ set, brunch y atardecer, te vienes?",
   },
 
   "community-sessions-vol-01": {
