@@ -98,18 +98,19 @@ export const PRICING = [
   },
 ];
 
-// Tarjetas de la sección Eventos de la home, en orden cronológico. Cada
-// cartel lleva su botón de "Ver detalle" a #/evento/<slug>. Solo se anuncia
-// la fecha: si un evento ya pasó, lo dice su propia fecha.
-// La última entrada no tiene cartel todavía → sale como banda "Próximamente".
+// Tarjetas de la sección Eventos de la home, de más reciente a más antigua:
+// lo primero que se ve es siempre lo próximo. Cada cartel lleva su botón de
+// "Ver detalle" a #/evento/<slug>. Solo se anuncia la fecha: si un evento ya
+// pasó, lo dice su propia fecha.
+// La entrada sin cartel sale como banda "Próximamente".
 export const EVENT_CARDS = [
   {
-    slug: "community-sessions-vol-01",
-    when: "Viernes 24 de julio",
-    name: "Community Sessions",
-    place: "Praia de Canelas · Vol. 01",
-    desc: "Pilates flow al atardecer sobre la arena, gratis y abierto a todo el mundo",
-    poster: "assets/eventos/cartel-community-ed01-2.png",
+    slug: "tardeo-pilates",
+    when: "Martes 18 de agosto",
+    name: "Tardeo Pilates",
+    place: "O Quinto Pino · Illa da Toxa",
+    desc: "Pilates al atardecer en la ría con DJ set en directo y late brunch para rematar",
+    poster: "assets/eventos/cartel-tardeo-pilates.png",
   },
   {
     slug: "pilates-and-wine",
@@ -120,12 +121,12 @@ export const EVENT_CARDS = [
     poster: "assets/eventos/pilates-and-wine.png",
   },
   {
-    slug: "tardeo-pilates",
-    when: "Martes 18 de agosto",
-    name: "Tardeo Pilates",
-    place: "O Quinto Pino · Illa da Toxa",
-    desc: "Pilates al atardecer en la ría con DJ set en directo y late brunch para rematar",
-    poster: "assets/eventos/tardeo-pilates.png",
+    slug: "community-sessions-vol-01",
+    when: "Viernes 24 de julio",
+    name: "Community Sessions",
+    place: "Praia de Canelas · Vol. 01",
+    desc: "Pilates flow al atardecer sobre la arena, gratis y abierto a todo el mundo",
+    poster: "assets/eventos/cartel-community-ed01-2.png",
   },
   {
     proximamente: true,
@@ -173,7 +174,7 @@ export const EVENTOS = {
     nombre: "Tardeo Pilates",
     nombreEm: "Pilates",
     eyebrow: "Evento de verano · cala × O Quinto Pino",
-    poster: "assets/eventos/tardeo-pilates.png",
+    poster: "assets/eventos/cartel-tardeo-pilates.png",
     // Azul atardecer del cartel — cielo y ría al caer la tarde
     tema: {
       accent:     "#54748E",

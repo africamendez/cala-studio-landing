@@ -5,12 +5,14 @@
    una tarjeta con el hueco del cartel vacío.
    La ubicación y el mapa viven ahora en el footer. */
 /* El ancho de columna manda: topar el alto del marco dejaría el cartel
-   flotando con dos bandas de papel a los lados */
+   flotando con dos bandas de papel a los lados.
+   Una sola fila: todos los carteles a la misma altura, hombro con hombro.
+   En móvil la fila se vuelve carrusel deslizable (abajo). */
 .evt-grid{
-  display:grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  display:grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
-  max-width: 980px;
+  max-width: 1080px;
   margin-inline: auto;
 }
 
@@ -31,6 +33,9 @@
    sombra abraza el cartel, no la caja que lo enmarca. */
 .evt-card__poster{
   aspect-ratio: 5 / 6;
+  /* min-height 0: sin esto, un cartel más alargado agranda su marco por el
+     mínimo automático del flex y las tres tarjetas dejan de ir a la par */
+  min-height: 0;
   display:flex; align-items:center; justify-content:center;
   padding: 20px;
   background: linear-gradient(180deg, var(--bg-2), #EFEDE8);
@@ -126,8 +131,26 @@
   margin-left: auto;
 }
 
+/* Móvil: la fila se convierte en carrusel — una tarjeta protagonista con la
+   siguiente asomando, deslizar con el dedo y snap al centro. Sin barra de
+   scroll: el cartel que asoma ya invita a deslizar. */
 @media (max-width: 880px){
-  .evt-grid{ grid-template-columns: 1fr; max-width: 460px; }
+  .evt-grid{
+    display: flex;
+    max-width: none;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 4px 8px;
+    margin-inline: -4px;
+    scrollbar-width: none;
+  }
+  .evt-grid::-webkit-scrollbar{ display: none; }
+  .evt-card{
+    flex: 0 0 82%;
+    max-width: 400px;
+    scroll-snap-align: center;
+  }
   .evt-card__poster{ padding: 16px; }
   .evt-card__body{ padding: 20px 18px 22px; }
   .evt-soon{ flex-direction: column; align-items:flex-start; gap: 12px; padding: 20px 18px; max-width: 460px; }
