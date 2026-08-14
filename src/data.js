@@ -183,14 +183,12 @@ export const EVENTOS = {
     cuando: "Martes 18 de agosto",
     hora: "19:30h",
     lugar: "O Quinto Pino, Illa da Toxa",
-    // Sin precio cerrado todavía: la cifra deja paso a un "por confirmar" y
-    // tanto la nota como el botón mandan a WhatsApp a pedir más info
-    precio: "Por confirmar",
-    precioNota: "consulta por WhatsApp",
+    // Sin precio cerrado todavía: no se enseña cifra, el botón de + info por
+    // WhatsApp hace el trabajo. Cuando se cierre, añadir precio: "XX€"
     nivel: "Todos los niveles",
     aforo: "Plazas limitadas",
     lede: "Un tardeo en la ría, la esterilla mirando al mar y música sonando hasta el late brunch",
-    descripcion: "El Tardeo Pilates lleva la clase fuera del estudio y la planta en la ría, junto al puente da Illa da Toxa, para movernos con la marea de fondo mientras un DJ set acompaña la sesión, y quedarnos después de late brunch viendo caer la tarde",
+    descripcion: "Nos vamos de tardeo a la ría, junto al puente da Illa da Toxa: pilates al aire libre con la marea de fondo y un DJ set poniendo la música, y al acabar nos quedamos de late brunch viendo caer la tarde",
     programa: "Pilates al atardecer · DJ set en directo · late brunch",
     ctaLabel: "+ Info por WhatsApp",
     reservaMsg: "Hola! Quiero más info del Tardeo Pilates (martes 18 de agosto)",
