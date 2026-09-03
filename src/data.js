@@ -1,3 +1,5 @@
+import { SUMMER_MODE } from "./config.js";
+
 export const CONTACT = {
   phoneLabel: "+34 644 39 31 85",
   phoneHref: "tel:+34644393185",
@@ -12,9 +14,13 @@ export const HERO_SLIDES = [
   { img: "assets/carousel-04.png", label: "Brunch club · Eventos", darkOverlay: true },
 ];
 
+// Las tres modalidades del método. `schedule` solo se usa en modo verano
+// (estudio presencial); `slug` es el que agrupa las clases en la biblioteca
+// online (#/clases/<slug>).
 export const GROUPS = [
   {
     num: "01",
+    slug: "mat",
     tag: "Todos los niveles",
     name: "Pilates",
     nameEm: "Mat",
@@ -26,6 +32,7 @@ export const GROUPS = [
   },
   {
     num: "02",
+    slug: "flow",
     tag: "Todos los niveles",
     name: "Pilates",
     nameEm: "Flow",
@@ -37,6 +44,7 @@ export const GROUPS = [
   },
   {
     num: "03",
+    slug: "sculpt",
     tag: "Todos los niveles",
     name: "Pilates",
     nameEm: "Sculpt",
@@ -49,6 +57,97 @@ export const GROUPS = [
     ],
   },
 ];
+
+// ── Biblioteca de clases online ──────────────────────────────────────────
+// Niveles con los que se filtran las clases en #/clases.
+export const NIVELES = [
+  { slug: "basico",     label: "Básico" },
+  { slug: "intermedio", label: "Intermedio" },
+  { slug: "avanzado",   label: "Avanzado" },
+];
+
+// Catálogo de clases en vídeo. Modelo mixto: `gratis: true` se ve y se
+// reproduce sin cuenta; `gratis: false` queda bloqueada hasta que abramos
+// las membresías.
+//
+// Para añadir una clase: sube el vídeo a YouTube (oculto/no listado) o Vimeo
+// y pega aquí el ID. La miniatura de YouTube sale sola.
+//   video: { provider: "youtube", id: "dQw4w9WgXcQ" }
+//   video: { provider: "vimeo",   id: "76979871" }
+//
+// ⚠️ Los IDs de abajo son PLACEHOLDER de ejemplo — sustitúyelos por los reales.
+export const CLASES = [
+  {
+    slug: "mat-suelo-y-respiracion",
+    modalidad: "mat",
+    nivel: "basico",
+    titulo: "Suelo y respiración",
+    duracion: "22 min",
+    descr: "Una toma de contacto con el método\nrespiración costal, activación del centro y movilidad de columna sin prisa",
+    video: { provider: "youtube", id: "ZXsQAXx_ao0" },
+    gratis: true,
+    publicada: "2026-09-01",
+  },
+  {
+    slug: "mat-abdomen-profundo",
+    modalidad: "mat",
+    nivel: "intermedio",
+    titulo: "Abdomen profundo",
+    duracion: "30 min",
+    descr: "Serie de suelo centrada en el core\ncontrol de la pelvis y del transverso, con precisión antes que intensidad",
+    video: { provider: "youtube", id: "v7AYKMP6rOE" },
+    gratis: false,
+    publicada: "2026-09-08",
+  },
+  {
+    slug: "flow-movilidad-de-manana",
+    modalidad: "flow",
+    nivel: "basico",
+    titulo: "Movilidad de mañana",
+    duracion: "18 min",
+    descr: "Secuencia corta para empezar el día\nencadenas movimiento sin pausa al ritmo de la respiración",
+    video: { provider: "youtube", id: "inpok4MKVLM" },
+    gratis: true,
+    publicada: "2026-09-04",
+  },
+  {
+    slug: "flow-cadena-completa",
+    modalidad: "flow",
+    nivel: "avanzado",
+    titulo: "Cadena completa",
+    duracion: "40 min",
+    descr: "Flow largo de cuerpo entero\ntransiciones exigentes, coordinación y continuidad de principio a fin",
+    video: { provider: "youtube", id: "2OEL4P1Rz04" },
+    gratis: false,
+    publicada: "2026-09-12",
+  },
+  {
+    slug: "sculpt-piernas-y-gluteo",
+    modalidad: "sculpt",
+    nivel: "intermedio",
+    titulo: "Piernas y glúteo",
+    duracion: "28 min",
+    descr: "Mat con banda y peso ligero\nfuerza funcional del tren inferior sin perder la fluidez del método",
+    video: { provider: "youtube", id: "gC_L9qAHVJ8" },
+    gratis: true,
+    publicada: "2026-09-06",
+  },
+  {
+    slug: "sculpt-tren-superior",
+    modalidad: "sculpt",
+    nivel: "avanzado",
+    titulo: "Tren superior",
+    duracion: "32 min",
+    descr: "Resistencia para brazos, espalda y hombros\nmandan el control y la técnica, la carga acompaña",
+    video: { provider: "youtube", id: "1ZYbU82GVz4" },
+    gratis: false,
+    publicada: "2026-09-15",
+  },
+];
+
+export function getClase(slug) {
+  return CLASES.find((c) => c.slug === slug) || null;
+}
 
 export const PRICING = [
   {
@@ -306,7 +405,10 @@ export const MOTIVOS_RECUPERACION = [
   "Otro",
 ];
 
-export const CONTACT_INTERES = [
+// Opciones del selector "¿Qué te interesa?" del formulario de contacto.
+// En modo verano son las del estudio presencial; fuera de temporada, las de
+// la plataforma online.
+const CONTACT_INTERES_VERANO = [
   { value: "duda",      label: "Una duda general" },
   { value: "mensual-1", label: "Mensualidad · 1 clase/semana" },
   { value: "mensual-2", label: "Mensualidad · 2 clases/semana" },
@@ -314,6 +416,16 @@ export const CONTACT_INTERES = [
   { value: "bono-10",   label: "Bono · 10 clases" },
   { value: "evento",    label: "Eventos / grupo privado" },
 ];
+
+const CONTACT_INTERES_ONLINE = [
+  { value: "acceso",  label: "Acceso anticipado a la plataforma" },
+  { value: "duda",    label: "Una duda general" },
+  { value: "retiro",  label: "Retiros y eventos" },
+  { value: "privado", label: "Grupo privado o clase a medida" },
+  { value: "colab",   label: "Llevar cala a mi ciudad o profe invitada" },
+];
+
+export const CONTACT_INTERES = SUMMER_MODE ? CONTACT_INTERES_VERANO : CONTACT_INTERES_ONLINE;
 
 export const LOCATION = {
   mapSrc: "https://www.openstreetmap.org/export/embed.html?bbox=-8.9339%2C42.4525%2C-8.8939%2C42.4725&layer=mapnik&marker=42.462495%2C-8.913941",

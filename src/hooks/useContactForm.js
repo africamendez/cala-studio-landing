@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { SUMMER_MODE } from "../config.js";
 import { CONTACT_INTERES } from "../data.js";
 
 // Formulario de contacto / dudas. Envía por email vía Formspree.
@@ -7,21 +8,31 @@ const FORMSPREE_ID = "xnjkglwj";
 
 const DRAFT_KEY = "cala.contactDraft";
 
+// Interés por defecto: "duda" en verano, "acceso anticipado" en la plataforma.
+const DEFAULT_INTERES = SUMMER_MODE ? "duda" : "acceso";
+
 export const initialForm = {
   nombre: "",
   email: "",
   telefono: "",
-  interes: "duda",
+  interes: DEFAULT_INTERES,
   mensaje: "",
   consent: false,
 };
 
 const labelFor = (v) => CONTACT_INTERES.find(o => o.value === v)?.label ?? v;
 
+const INTERES_VALIDOS = CONTACT_INTERES.map(o => o.value);
+
 function readDraft() {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
-    if (raw) return { ...initialForm, ...JSON.parse(raw) };
+    if (raw) {
+      const draft = { ...initialForm, ...JSON.parse(raw) };
+      // Un borrador de otra temporada puede traer un interés que ya no existe
+      if (!INTERES_VALIDOS.includes(draft.interes)) draft.interes = DEFAULT_INTERES;
+      return draft;
+    }
   } catch {}
   return initialForm;
 }
@@ -45,6 +56,18 @@ export function useContactForm() {
   useEffect(() => {
     try { localStorage.setItem(DRAFT_KEY, JSON.stringify(form)); } catch {}
   }, [form]);
+
+  // Prefill del interés al llegar desde otra página (p.ej. una clase de
+  // miembros → "acceso anticipado"). Se consume una sola vez.
+  useEffect(() => {
+    try {
+      const pre = sessionStorage.getItem("cala.interes");
+      if (pre) {
+        sessionStorage.removeItem("cala.interes");
+        if (INTERES_VALIDOS.includes(pre)) setForm(f => ({ ...f, interes: pre }));
+      }
+    } catch {}
+  }, []);
 
   const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SUMMER_MODE } from "../config.js";
 import Section from "./Section.jsx";
 import { EVENT_CARDS } from "../data.js";
 
@@ -50,11 +51,14 @@ export default function Eventos() {
     <Section
       id="eventos"
       num="III · Eventos"
-      title={<>Fuera del <em>estudio</em></>}
-      right={<>
+      title={SUMMER_MODE ? <>Fuera del <em>estudio</em></> : <>En <em>persona</em></>}
+      right={SUMMER_MODE ? (<>
         Encuentros de verano abiertos a todo el mundo, vengas o no a clase<br />
         Entra en cada cartel para ver el plan completo
-      </>}
+      </>) : (<>
+        Retiros, encuentros y colaboraciones donde el movimiento nos lleve<br />
+        Entra en cada cartel para ver el plan completo
+      </>)}
     >
       <div className="evt-grid">
         {conCartel.map(e => <EventCard key={e.slug} e={e} />)}

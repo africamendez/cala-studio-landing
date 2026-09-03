@@ -1,3 +1,5 @@
+import { SUMMER_MODE } from "../config.js";
+
 function IconGrupos() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
@@ -31,13 +33,35 @@ function IconReserva() {
     </svg>
   );
 }
+function IconClases() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="M10 9l5 3-5 3z"/>
+    </svg>
+  );
+}
+function IconContacto() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 20.5l1.5-5.5A8.5 8.5 0 1 1 21 11.5z"/>
+    </svg>
+  );
+}
 
-const TABS = [
-  { href: "#grupos",  label: "Grupos",   Icon: IconGrupos  },
-  { href: "#tarifas", label: "Tarifas",  Icon: IconTarifas },
-  { href: "#eventos", label: "Eventos",  Icon: IconAgenda  },
-  { href: "#/reservar", label: "Reservar", Icon: IconReserva },
-];
+const TABS = SUMMER_MODE
+  ? [
+      { href: "#grupos",    label: "Grupos",   Icon: IconGrupos  },
+      { href: "#tarifas",   label: "Tarifas",  Icon: IconTarifas },
+      { href: "#eventos",   label: "Eventos",  Icon: IconAgenda  },
+      { href: "#/reservar", label: "Reservar", Icon: IconReserva },
+    ]
+  : [
+      { href: "#modalidades", label: "Modalidades", Icon: IconGrupos   },
+      { href: "#/clases",     label: "Clases",      Icon: IconClases   },
+      { href: "#eventos",     label: "Eventos",     Icon: IconAgenda   },
+      { href: "#contacto",    label: "Contacto",    Icon: IconContacto },
+    ];
 
 export default function MobileNav() {
   return (

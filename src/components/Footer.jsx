@@ -1,7 +1,10 @@
+import { SUMMER_MODE } from "../config.js";
 import CallButton from "./CallButton.jsx";
 import { CONTACT, LOCATION } from "../data.js";
 
-const BOTTOM = ["© 2026 - cala.studio", "Edición Verano", "Made on the Atlantic"];
+const BOTTOM = SUMMER_MODE
+  ? ["© 2026 - cala.studio", "Edición Verano", "Made on the Atlantic"]
+  : ["© 2026 - cala.studio", "Wherever movement takes us", "Made on the Atlantic"];
 
 // La ubicación cierra la página: mapa, dirección y la casa que nos acoge.
 function Ubicacion() {
@@ -35,11 +38,13 @@ function Ubicacion() {
 export default function Footer() {
   return (
     <footer>
-      <Ubicacion />
+      {SUMMER_MODE && <Ubicacion />}
       <div className="brand-block">
         <div className="logo">cala.studio</div>
         <div className="tag">
-          Pilates de costa . San vicente do Mar, 2026.
+          {SUMMER_MODE
+            ? "Pilates de costa . San vicente do Mar, 2026."
+            : "Pilates de costa . Clases donde estés, 2026."}
         </div>
       </div>
       <div className="foot-contact">

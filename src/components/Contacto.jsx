@@ -1,25 +1,47 @@
 import { useEffect } from "react";
+import { SUMMER_MODE } from "../config.js";
 import Section from "./Section.jsx";
 import Field from "./ui/Field.jsx";
 import { useContactForm } from "../hooks/useContactForm.js";
 import { CONTACT_INTERES } from "../data.js";
 
 function Copy() {
+  if (SUMMER_MODE) {
+    return (
+      <div className="copy">
+        <h3>¿Hablamos?</h3>
+        <p>
+          Dudas sobre grupos, tarifas o bonos<br />
+          o quieres tu plaza fija mensual<br />
+          Escríbenos y te respondemos pronto
+        </p>
+        <div className="note">
+          <strong>Plaza fija mensual.</strong> Te confirmamos tu horario por
+          teléfono y te guardamos el sitio cada semana.
+        </div>
+        <div className="note">
+          <strong>¿Solo quieres reservar una clase?</strong> Hazlo directo en
+          la <a href="#/reservar">agenda</a>.
+        </div>
+        <img src="assets/ending.png" alt="" className="copy-img" />
+      </div>
+    );
+  }
   return (
     <div className="copy">
       <h3>¿Hablamos?</h3>
       <p>
-        Dudas sobre grupos, tarifas o bonos<br />
-        o quieres tu plaza fija mensual<br />
-        Escríbenos y te respondemos pronto
+        Apúntate al acceso anticipado de la plataforma<br />
+        o cuéntanos si quieres un retiro, un grupo privado<br />
+        o llevar cala a tu ciudad
       </p>
       <div className="note">
-        <strong>Plaza fija mensual.</strong> Te confirmamos tu horario por
-        teléfono y te guardamos el sitio cada semana.
+        <strong>Acceso anticipado.</strong> Las cuentas y las membresías llegan
+        pronto. Deja tu contacto y serás de las primeras en entrar.
       </div>
       <div className="note">
-        <strong>¿Solo quieres reservar una clase?</strong> Hazlo directo en
-        la <a href="#/reservar">agenda</a>.
+        <strong>Retiros, eventos y colaboraciones.</strong> Donde el movimiento
+        nos lleve. Escríbenos y lo montamos.
       </div>
       <img src="assets/ending.png" alt="" className="copy-img" />
     </div>

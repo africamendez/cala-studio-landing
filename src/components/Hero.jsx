@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { SUMMER_MODE } from "../config.js";
 import { HERO_SLIDES } from "../data.js";
 
 const SLIDE_MS = 5500;
@@ -52,17 +53,36 @@ export default function Hero() {
 
       <div className="hero-inner">
         <div className="hero-center">
-          <h1>Pilates<br/>con <em>vistas</em></h1>
-          <p className="lede">
-            Grupos reducidos, luz natural y sin prisa.<br/>
-            Mat, flow, sculpt y sesiones de amanecer frente al mar.
-          </p>
-          <div className="actions">
-            <a href="#/reservar" className="btn btn-primary">
-              Agenda tu clase <span className="arrow"></span>
-            </a>
-            <a href="#grupos" className="btn btn-ghost">Ver horarios</a>
-          </div>
+          {SUMMER_MODE ? (
+            <>
+              <h1>Pilates<br/>con <em>vistas</em></h1>
+              <p className="lede">
+                Grupos reducidos, luz natural y sin prisa.<br/>
+                Mat, flow, sculpt y sesiones de amanecer frente al mar.
+              </p>
+              <div className="actions">
+                <a href="#/reservar" className="btn btn-primary">
+                  Agenda tu clase <span className="arrow"></span>
+                </a>
+                <a href="#grupos" className="btn btn-ghost">Ver horarios</a>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="hero-eyebrow">Wherever movement takes us</span>
+              <h1>Pilates<br/>donde <em>estés</em></h1>
+              <p className="lede">
+                Clases de pilates online por modalidad y nivel<br/>
+                Mat, Flow y Sculpt para practicar desde donde quieras
+              </p>
+              <div className="actions">
+                <a href="#/clases" className="btn btn-primary">
+                  Ver clases <span className="arrow"></span>
+                </a>
+                <a href="#contacto" className="btn btn-ghost">Acceso anticipado</a>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="hero-bottom">
