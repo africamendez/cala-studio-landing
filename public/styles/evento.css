@@ -108,6 +108,13 @@
 /* Comprobando el aforo: el botón está, pero aún no lleva a ningún sitio */
 .ev-cta.is-cargando{ opacity: .5; pointer-events: none; box-shadow: none; }
 
+/* Pago online (evento y paquete): letra pequeña bajo el botón y avisos */
+.ev-fine{
+  font-size: 11px; letter-spacing: .04em; text-align: center;
+  color: var(--ink-mute);
+}
+.ev-aviso{ font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+
 /* CTA secundario (abrir la lista de espera): mismo gesto, sin relleno */
 .ev-cta-ghost{
   background: transparent; color: var(--ev-accent-deep, #9C3020);

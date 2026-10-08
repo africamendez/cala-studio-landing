@@ -37,7 +37,7 @@ export default function ClasesPage({ modalidadInicial }) {
         <h1 className="clp-title">Todas las <em>clases</em></h1>
         <p className="clp-lede">
           Filtra por modalidad y nivel<br />
-          Las marcadas como gratis se ven sin cuenta, el resto abre con la membresía
+          Cada clase forma parte de un paquete, pulsa en cualquiera para ver el suyo
         </p>
       </header>
 

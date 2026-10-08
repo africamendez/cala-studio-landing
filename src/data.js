@@ -1,4 +1,5 @@
 import { SUMMER_MODE } from "./config.js";
+import { PAQUETES_VENTA, EVENTOS_PRECIO } from "../supabase/functions/_shared/catalogo.js";
 
 export const CONTACT = {
   phoneLabel: "+34 644 39 31 85",
@@ -66,87 +67,248 @@ export const NIVELES = [
   { slug: "avanzado",   label: "Avanzado" },
 ];
 
-// Catálogo de clases en vídeo. Modelo mixto: `gratis: true` se ve y se
-// reproduce sin cuenta; `gratis: false` queda bloqueada hasta que abramos
-// las membresías.
+// Paquetes: cada uno agrupa sus clases en vídeo y se compra entero, con pago
+// online (Stripe) desde su página, #/paquete/<slug>.
+// Aquí va la ficha (los textos). El nombre y el precio de cada uno están en
+// supabase/functions/_shared/catalogo.js, que comparten la web y la función
+// que cobra: un paquete que no esté allí no sale en la web.
 //
-// Para añadir una clase: sube el vídeo a YouTube (oculto/no listado) o Vimeo
-// y pega aquí el ID. La miniatura de YouTube sale sola.
+// ⚠️ Textos de EJEMPLO — ajústalos antes de publicar.
+const PAQUETES_FICHA = [
+  {
+    slug: "premama",
+    nombreEm: "Premamá",
+    lede: "Movimiento suave y seguro para acompañar el embarazo\ntrimestre a trimestre",
+    descr: "Clases pensadas para cada etapa del embarazo: respiración, suelo pélvico, movilidad de cadera y espalda, y fuerza amable para llegar al parto sintiéndote bien en tu cuerpo",
+  },
+  {
+    slug: "postparto",
+    nombreEm: "Postparto",
+    lede: "Volver a tu centro sin prisa\nrecuperación progresiva después del parto",
+    descr: "Reconecta con el abdomen profundo y el suelo pélvico, recoloca la postura y recupera fuerza paso a paso, con clases cortas que caben en el día a día con un bebé",
+  },
+  {
+    slug: "sculpt-i",
+    nombreEm: "Sculpt I",
+    lede: "Mat intenso con resistencia\nel primer bloque para ganar fuerza sin perder fluidez",
+    descr: "Banda elástica y peso ligero sobre la base del método: tren inferior, tren superior y centro, con el control y la técnica por delante de la carga",
+  },
+  {
+    slug: "animal-flow-i",
+    nombreEm: "Flow I",
+    lede: "Movimiento cuadrúpedo a ras de suelo\nfuerza, movilidad y coordinación con tu propio peso",
+    descr: "Las posiciones y transiciones base de Animal Flow, explicadas desde cero y encadenadas en un primer flow completo",
+  },
+  {
+    slug: "mat-i",
+    nombreEm: "Mat I",
+    lede: "La base del método en suelo\nrespiración, centro y control postural",
+    descr: "El punto de partida si llegas sin experiencia: trabajo en suelo con tu propio peso para entender la respiración, activar el centro y mover la columna con precisión",
+  },
+  {
+    slug: "flow-i",
+    nombreEm: "Flow I",
+    lede: "Secuencias encadenadas al ritmo de la respiración\nmovilidad y continuidad",
+    descr: "Del primer flow corto de mañana a una cadena larga de cuerpo entero, con transiciones que piden coordinación y presencia",
+  },
+];
+
+export const PAQUETES = PAQUETES_FICHA
+  .filter((p) => PAQUETES_VENTA[p.slug])
+  .map((p) => ({ ...p, ...PAQUETES_VENTA[p.slug] }));
+
+export function getPaquete(slug) {
+  return PAQUETES.find((p) => p.slug === slug) || null;
+}
+
+// Catálogo de clases en vídeo. Cada clase pertenece a un `paquete` y sale
+// bloqueada (velo + candado) hasta que la cuenta lo compra: al pulsarla lleva
+// a la ficha de su paquete.
+// `gratis: true` la abre sin candado, por si quieres dejar alguna de muestra.
+// `modalidad` es opcional: solo la usan los filtros de #/clases.
+//
+// El vídeo de una clase de pago NO va aquí: este archivo se descarga entero
+// con la web, lo haya comprado o no quien la abre. Va en la tabla
+// `clase_videos` de Supabase (0016_clase_videos.sql), que solo se lo entrega a
+// las cuentas con el paquete pagado. Para añadir una clase: sube el vídeo a
+// YouTube (oculto/no listado) o Vimeo, pon su ficha aquí y su fila allí, con
+// el mismo slug.
+//
+// Solo las de muestra (`gratis: true`) llevan el vídeo aquí, que es público:
 //   video: { provider: "youtube", id: "dQw4w9WgXcQ" }
 //   video: { provider: "vimeo",   id: "76979871" }
 //
-// ⚠️ Los IDs de abajo son PLACEHOLDER de ejemplo — sustitúyelos por los reales.
+// `poster` (opcional): imagen propia para la tarjeta, p. ej.
+// "assets/clases/mat-suelo-y-respiracion.jpg". Sin ella, la clase bloqueada
+// sale con el marcador liso: la miniatura de YouTube lleva el ID del vídeo en
+// su dirección, así que no se le puede enseñar a quien no lo ha comprado.
 export const CLASES = [
   {
     slug: "mat-suelo-y-respiracion",
     modalidad: "mat",
+    paquete: "mat-i",
     nivel: "basico",
     titulo: "Suelo y respiración",
     duracion: "22 min",
     descr: "Una toma de contacto con el método\nrespiración costal, activación del centro y movilidad de columna sin prisa",
-    video: { provider: "youtube", id: "ZXsQAXx_ao0" },
-    gratis: true,
+    gratis: false,
     publicada: "2026-09-01",
   },
   {
     slug: "mat-abdomen-profundo",
     modalidad: "mat",
+    paquete: "mat-i",
     nivel: "intermedio",
     titulo: "Abdomen profundo",
     duracion: "30 min",
     descr: "Serie de suelo centrada en el core\ncontrol de la pelvis y del transverso, con precisión antes que intensidad",
-    video: { provider: "youtube", id: "v7AYKMP6rOE" },
     gratis: false,
     publicada: "2026-09-08",
   },
   {
     slug: "flow-movilidad-de-manana",
     modalidad: "flow",
+    paquete: "flow-i",
     nivel: "basico",
     titulo: "Movilidad de mañana",
     duracion: "18 min",
     descr: "Secuencia corta para empezar el día\nencadenas movimiento sin pausa al ritmo de la respiración",
-    video: { provider: "youtube", id: "inpok4MKVLM" },
-    gratis: true,
+    gratis: false,
     publicada: "2026-09-04",
   },
   {
     slug: "flow-cadena-completa",
     modalidad: "flow",
+    paquete: "flow-i",
     nivel: "avanzado",
     titulo: "Cadena completa",
     duracion: "40 min",
     descr: "Flow largo de cuerpo entero\ntransiciones exigentes, coordinación y continuidad de principio a fin",
-    video: { provider: "youtube", id: "2OEL4P1Rz04" },
     gratis: false,
     publicada: "2026-09-12",
   },
   {
     slug: "sculpt-piernas-y-gluteo",
     modalidad: "sculpt",
+    paquete: "sculpt-i",
     nivel: "intermedio",
     titulo: "Piernas y glúteo",
     duracion: "28 min",
     descr: "Mat con banda y peso ligero\nfuerza funcional del tren inferior sin perder la fluidez del método",
-    video: { provider: "youtube", id: "gC_L9qAHVJ8" },
-    gratis: true,
+    gratis: false,
     publicada: "2026-09-06",
   },
   {
     slug: "sculpt-tren-superior",
     modalidad: "sculpt",
+    paquete: "sculpt-i",
     nivel: "avanzado",
     titulo: "Tren superior",
     duracion: "32 min",
     descr: "Resistencia para brazos, espalda y hombros\nmandan el control y la técnica, la carga acompaña",
-    video: { provider: "youtube", id: "1ZYbU82GVz4" },
     gratis: false,
     publicada: "2026-09-15",
+  },
+  {
+    slug: "premama-respiracion-y-suelo-pelvico",
+    modalidad: "mat",
+    paquete: "premama",
+    nivel: "basico",
+    titulo: "Respiración y suelo pélvico",
+    duracion: "20 min",
+    descr: "Primer contacto con el trabajo de embarazo\nrespirar, soltar y activar el suelo pélvico con consciencia",
+    gratis: false,
+    publicada: "2026-10-01",
+  },
+  {
+    slug: "premama-cadera-y-espalda",
+    modalidad: "mat",
+    paquete: "premama",
+    nivel: "basico",
+    titulo: "Cadera y espalda",
+    duracion: "25 min",
+    descr: "Movilidad para aliviar la zona lumbar\ncadera libre y espalda acompañada a medida que crece la barriga",
+    gratis: false,
+    publicada: "2026-10-02",
+  },
+  {
+    slug: "premama-fuerza-amable",
+    modalidad: "mat",
+    paquete: "premama",
+    nivel: "intermedio",
+    titulo: "Fuerza amable",
+    duracion: "28 min",
+    descr: "Piernas, glúteo y brazos para el tercer trimestre\nfuerza útil sin presión sobre el abdomen",
+    gratis: false,
+    publicada: "2026-10-03",
+  },
+  {
+    slug: "postparto-reconectar-el-centro",
+    modalidad: "mat",
+    paquete: "postparto",
+    nivel: "basico",
+    titulo: "Reconectar el centro",
+    duracion: "15 min",
+    descr: "Las primeras semanas\nrespiración, transverso y suelo pélvico desde lo más sencillo",
+    gratis: false,
+    publicada: "2026-10-04",
+  },
+  {
+    slug: "postparto-postura-y-espalda",
+    modalidad: "mat",
+    paquete: "postparto",
+    nivel: "basico",
+    titulo: "Postura y espalda",
+    duracion: "22 min",
+    descr: "Para las horas de brazos y lactancia\nabre el pecho, descarga el cuello y recoloca la espalda",
+    gratis: false,
+    publicada: "2026-10-05",
+  },
+  {
+    slug: "postparto-vuelta-a-la-fuerza",
+    modalidad: "mat",
+    paquete: "postparto",
+    nivel: "intermedio",
+    titulo: "Vuelta a la fuerza",
+    duracion: "30 min",
+    descr: "Cuando el centro ya responde\ncuerpo entero con progresiones seguras",
+    gratis: false,
+    publicada: "2026-10-06",
+  },
+  {
+    slug: "animal-flow-posiciones-base",
+    paquete: "animal-flow-i",
+    nivel: "basico",
+    titulo: "Posiciones base",
+    duracion: "20 min",
+    descr: "Beast, crab y ape paso a paso\nmuñecas preparadas y apoyos bien colocados",
+    gratis: false,
+    publicada: "2026-10-07",
+  },
+  {
+    slug: "animal-flow-primer-flow",
+    paquete: "animal-flow-i",
+    nivel: "intermedio",
+    titulo: "Primer flow",
+    duracion: "26 min",
+    descr: "Transiciones encadenadas\nunes las posiciones base en una secuencia completa",
+    gratis: false,
+    publicada: "2026-10-08",
   },
 ];
 
 export function getClase(slug) {
   return CLASES.find((c) => c.slug === slug) || null;
+}
+
+export function clasesDePaquete(slug) {
+  return CLASES.filter((c) => c.paquete === slug);
+}
+
+// Una clase bloqueada lleva a comprar su paquete; una abierta, a su reproductor.
+// Si está bloqueada lo dice useAcceso: depende de lo que tenga comprado la cuenta
+export function claseHref(c, bloqueada) {
+  return bloqueada && c.paquete ? `#/paquete/${c.paquete}` : `#/clase/${c.slug}`;
 }
 
 export const PRICING = [
@@ -236,7 +398,12 @@ export const EVENT_CARDS = [
 
 // Detalle de cada evento → página dedicada #/evento/<slug>.
 // El cartel manda: la página lo muestra entero (sin recortar) y ofrece un
-// CTA de reserva claro por WhatsApp (mismo modelo que las clases).
+// CTA de reserva claro: la plaza se paga online (Stripe).
+// El precio de un evento de pago NO va aquí: está en EVENTOS_PRECIO
+// (supabase/functions/_shared/catalogo.js), que comparten la web y la función
+// que cobra. Para que se pueda reservar, el evento necesita además su sesión en
+// el calendario (fecha y aforo), con este mismo slug. Un evento sin precio allí
+// (gratis, o aún por anunciar) lleva al formulario de contacto.
 export const EVENTOS = {
   "pilates-and-wine": {
     slug: "pilates-and-wine",
@@ -254,7 +421,6 @@ export const EVENTOS = {
     cuando: "Sábado 15 de agosto",
     hora: "10:30h",
     lugar: "Bodega Casal Fuentes",
-    precio: "35€",
     nivel: "Todos los niveles",
     aforo: "Plazas limitadas",
     lede: "Una mañana entre viñas, la esterilla al aire libre y una copa para brindar",
@@ -262,8 +428,6 @@ export const EVENTOS = {
     descripcion: "Pilates & Wine es nuestra excusa para salir del estudio y encontrarnos en un lugar bonito. Una mañana para movernos al aire libre entre viñas, reconectar con el cuerpo y con la naturaleza, y quedarnos después a charlar entre amigas con una copa en la mano",
     // Programa breve (lo que ya anuncia el cartel, en una línea)
     programa: "Masterclass de pilates · aperitivo con vino · paseo por las viñas",
-    // CTA de reserva — abre WhatsApp con el mensaje ya escrito
-    reservaMsg: "Hola! Quiero reservar plaza para Pilates & Wine (sábado 15 de agosto)",
     // Texto con el que se comparte la página (WhatsApp, Instagram, nativo)
     compartirMsg: "Pilates & Wine · sábado 15 de agosto entre viñas\nTe vienes?",
   },
@@ -283,15 +447,13 @@ export const EVENTOS = {
     hora: "19:00h",
     lugar: "O Quinto Pino, Illa da Toxa",
     // Early bird para las primeras plazas; al agotarse, pasa a 40€ (actualizar
-    // precio y quitar la nota entonces)
-    precio: "35€",
+    // el precio en el catálogo y quitar la nota entonces)
     precioNota: "early bird primeras plazas · después 40€",
     nivel: "Todos los niveles",
     aforo: "Plazas limitadas",
     lede: "Un atardecer en la ría, la esterilla mirando al mar y música sonando hasta el late brunch",
     descripcion: "Nos vamos de tardeo a la ría, junto al puente da Illa da Toxa: pilates al aire libre con la marea de fondo y un DJ set acompañando la sesión, y al acabar nos quedamos de late brunch viendo caer el sol",
     programa: "Pilates al atardecer · DJ set en directo · late brunch",
-    reservaMsg: "Hola! Quiero reservar plaza para el Tardeo Pilates (jueves 20 de agosto)",
     compartirMsg: "Tardeo Pilates · jueves 20 de agosto en la Illa da Toxa\nDJ set, brunch y atardecer, te vienes?",
   },
 
@@ -319,7 +481,6 @@ export const EVENTOS = {
     descripcion: "Las Community Sessions nacen para sacar el pilates del estudio y llevarlo a donde ya está la gente en verano: la playa, el atardecer, el rato de después. La Vol. 01 juntó esterillas en Canelas para movernos al aire libre, sin niveles ni compromiso, y quedarnos viendo cómo se iba la luz",
     programa: "Pilates flow al aire libre · movimiento, respiración y conexión",
     ctaLabel: "Avisadme de la Vol. 02",
-    reservaMsg: "Hola! Quiero que me aviséis de la próxima Community Session",
     compartirMsg: "Community Sessions · pilates al atardecer en la playa\nMira qué plan",
   },
 };
@@ -341,7 +502,10 @@ export const EVENTO_AGOTADO = {
 };
 
 export function getEvento(slug) {
-  return EVENTOS[slug] || null;
+  if (!Object.hasOwn(EVENTOS, slug)) return null;
+  // Evento de pago: su precio sale del catálogo que comparte con la función que cobra
+  const precio = EVENTOS_PRECIO[slug];
+  return precio == null ? EVENTOS[slug] : { ...EVENTOS[slug], precio: `${precio}€`, dePago: true };
 }
 
 export const BONOS = [
@@ -419,6 +583,7 @@ const CONTACT_INTERES_VERANO = [
 
 const CONTACT_INTERES_ONLINE = [
   { value: "acceso",  label: "Acceso anticipado a la plataforma" },
+  { value: "cuenta",  label: "Mi cuenta o una compra" },
   { value: "duda",    label: "Una duda general" },
   { value: "retiro",  label: "Retiros y eventos" },
   { value: "privado", label: "Grupo privado o clase a medida" },

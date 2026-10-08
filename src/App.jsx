@@ -15,6 +15,7 @@ import EventoPage from "./components/EventoPage.jsx";
 import GestionPage from "./components/GestionPage.jsx";
 import ClasesPage from "./components/ClasesPage.jsx";
 import ClasePage from "./components/ClasePage.jsx";
+import PaquetePage from "./components/PaquetePage.jsx";
 import MobileTopBar from "./components/MobileTopBar.jsx";
 import MobileNav from "./components/MobileNav.jsx";
 
@@ -42,14 +43,21 @@ export default function App() {
     const slug = hash.split("/")[2] || "";
     return <ClasePage key={slug} slug={slug} />;
   }
+  // Compra de un paquete de clases (#/paquete/<slug>)
+  if (hash.startsWith("#/paquete/")) {
+    const slug = hash.split("/")[2] || "";
+    return <PaquetePage key={slug} slug={slug} />;
+  }
   // Detalle de evento dedicado (#/evento/<slug>)
   if (hash.startsWith("#/evento/")) {
     const slug = hash.split("/")[2] || "";
     return <EventoPage key={slug} slug={slug} />;
   }
-  // Bloque de verano: reserva de plaza y panel de gestión (solo en temporada)
+  // Panel de gestión (con PIN): quién viene a cada clase y a cada evento.
+  // Los eventos se reservan todo el año, así que el panel está siempre.
+  if (hash.startsWith("#/gestion")) return <GestionPage />;
+  // Bloque de verano: reserva de plaza en clase (solo en temporada)
   if (SUMMER_MODE && hash.startsWith("#/reservar")) return <ReservaPage />;
-  if (SUMMER_MODE && hash.startsWith("#/gestion")) return <GestionPage />;
 
   const Sections = SUMMER_MODE
     ? <><Hero /><Grupos /><Tarifas /><Eventos /><Contacto /><Footer /></>

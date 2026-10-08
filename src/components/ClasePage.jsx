@@ -1,27 +1,21 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { getClase, CLASES, GROUPS, NIVELES } from "../data.js";
-import { embedUrl, thumbUrl } from "../lib/video.js";
+import { getClase, getPaquete, clasesDePaquete, claseHref, CLASES, GROUPS, NIVELES } from "../data.js";
+import { embedUrl, posterUrl } from "../lib/video.js";
+import { useAcceso } from "../hooks/useAcceso.jsx";
 import ShareRow from "./ShareRow.jsx";
 import MultiLine from "./MultiLine.jsx";
 import BrandMark from "./BrandMark.jsx";
+import LockIcon from "./ui/LockIcon.jsx";
 
 const modLabel = (slug) => GROUPS.find((g) => g.slug === slug)?.nameEm || slug;
 const nivLabel = (slug) => NIVELES.find((n) => n.slug === slug)?.label || slug;
 
-function LockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
-
-// Enlaza a otra clase de la misma modalidad
+// Enlaza a otra clase del mismo paquete (o modalidad)
 function MiniClase({ clase }) {
-  const thumb = thumbUrl(clase.video);
+  const { bloqueada, videoDe } = useAcceso();
+  const thumb = posterUrl(clase, videoDe(clase));
   return (
-    <a className="clp-mini" href={`#/clase/${clase.slug}`}>
+    <a className="clp-mini" href={claseHref(clase, bloqueada(clase))}>
       {thumb && <img className="clp-mini__thumb" src={thumb} alt="" loading="lazy" />}
       <span className="clp-mini__body">
         <span className="clp-mini__title">{clase.titulo}</span>
@@ -33,6 +27,7 @@ function MiniClase({ clase }) {
 
 export default function ClasePage({ slug }) {
   const clase = getClase(slug);
+  const { bloqueada, videoDe, cargando } = useAcceso();
   const [aviso, setAviso] = useState("");
   const avisoTimer = useRef(null);
 
@@ -46,13 +41,6 @@ export default function ClasePage({ slug }) {
 
   const goHome    = (e) => { e.preventDefault(); window.location.hash = ""; };
   const goClases  = (e) => { e.preventDefault(); window.location.hash = "#/clases"; };
-
-  // Clase de miembros → al acceso anticipado, con el interés ya elegido
-  const goAcceso = (e) => {
-    e.preventDefault();
-    try { sessionStorage.setItem("cala.interes", "acceso"); } catch {}
-    window.location.hash = "#contacto";
-  };
 
   if (!clase) {
     return (
@@ -69,9 +57,19 @@ export default function ClasePage({ slug }) {
   const pageUrl = typeof window !== "undefined"
     ? `${window.location.origin}${window.location.pathname}#/clase/${clase.slug}`
     : "";
-  const shareText = `${clase.titulo} · Pilates ${modLabel(clase.modalidad)}\nUna clase de cala.studio`;
-  const poster = thumbUrl(clase.video);
-  const relacionadas = CLASES.filter((c) => c.modalidad === clase.modalidad && c.slug !== clase.slug).slice(0, 3);
+  const shareText = `${clase.titulo}\nUna clase de cala.studio`;
+  const video = videoDe(clase);
+  const poster = posterUrl(clase, video);
+  const paquete = getPaquete(clase.paquete);
+  const locked = bloqueada(clase);
+  // Mientras se leen las compras de la cuenta aún no se sabe si es suya: se
+  // enseña el marcador sin más, ni reproductor ni invitación a comprar
+  const sinSaber = locked && cargando;
+  // Es suya pero su vídeo no ha llegado: falta su fila en `clase_videos`
+  const sinVideo = !locked && !video;
+  const grupo = paquete ? clasesDePaquete(paquete.slug) : CLASES.filter((c) => c.modalidad === clase.modalidad);
+  const relacionadas = grupo.filter((c) => c.slug !== clase.slug).slice(0, 3);
+  const familia = paquete ? paquete.nombre : `Pilates ${modLabel(clase.modalidad)}`;
 
   return (
     <main className="clase-page">
@@ -84,10 +82,10 @@ export default function ClasePage({ slug }) {
           <a href="#/clases" className="clp-back" onClick={goClases}>‹ Clases</a>
         </div>
 
-        {clase.gratis ? (
+        {!locked && video ? (
           <div className="clp-video">
             <iframe
-              src={embedUrl(clase.video)}
+              src={embedUrl(video)}
               title={clase.titulo}
               loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
@@ -98,15 +96,24 @@ export default function ClasePage({ slug }) {
           <div className="clp-locked" style={poster ? { backgroundImage: `url(${poster})` } : undefined}>
             <span className="clp-locked__veil" aria-hidden="true" />
             <div className="clp-locked__in">
-              <span className="clp-locked__icon"><LockIcon /></span>
-              <span className="clp-locked__k">Clase para miembros</span>
-              <p className="clp-locked__note">
-                La plataforma con cuentas y membresías llega pronto<br />
-                déjanos tu contacto y serás de las primeras
-              </p>
-              <a href="#contacto" className="clp-locked__cta" onClick={goAcceso}>
-                Apúntame al acceso anticipado<span className="ev-cta-arw" aria-hidden="true" />
-              </a>
+              {!sinVideo && <span className="clp-locked__icon"><LockIcon /></span>}
+              {sinVideo && (
+                <>
+                  <span className="clp-locked__k">Vídeo en camino</span>
+                  <p className="clp-locked__note">Esta clase ya es tuya y su vídeo estará disponible muy pronto</p>
+                </>
+              )}
+              {locked && !sinSaber && <span className="clp-locked__k">{paquete ? `Incluida en ${paquete.nombre}` : "Clase bloqueada"}</span>}
+              {locked && !sinSaber && paquete && (
+                <>
+                  <p className="clp-locked__note">
+                    Compra el paquete y desbloquea todas sus clases
+                  </p>
+                  <a href={`#/paquete/${paquete.slug}`} className="clp-locked__cta">
+                    Ver paquete · {paquete.precio}€<span className="ev-cta-arw" aria-hidden="true" />
+                  </a>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -115,21 +122,21 @@ export default function ClasePage({ slug }) {
       <section className="ev-panel">
         <div className="ev-panel__in">
           <header className="ev-head">
-            <span className="ev-eyebrow">Pilates {modLabel(clase.modalidad)} · {nivLabel(clase.nivel)}</span>
+            <span className="ev-eyebrow">{familia} · {nivLabel(clase.nivel)}</span>
             <h1 className="ev-title">{clase.titulo}</h1>
             <MultiLine text={clase.descr} className="ev-lede" />
           </header>
 
           <ul className="ev-meta">
-            <li><span className="ev-meta-k">Modalidad</span><span className="ev-meta-v">Pilates {modLabel(clase.modalidad)}</span></li>
+            <li><span className="ev-meta-k">{paquete ? "Paquete" : "Modalidad"}</span><span className="ev-meta-v">{familia}</span></li>
             <li><span className="ev-meta-k">Nivel</span><span className="ev-meta-v">{nivLabel(clase.nivel)}</span></li>
             <li><span className="ev-meta-k">Duración</span><span className="ev-meta-v">{clase.duracion}</span></li>
-            <li><span className="ev-meta-k">Acceso</span><span className="ev-meta-v">{clase.gratis ? "Gratis, sin cuenta" : "Con membresía"}</span></li>
+            <li><span className="ev-meta-k">Acceso</span><span className="ev-meta-v">{locked ? "Con el paquete" : clase.gratis ? "Gratis, sin cuenta" : "En tu paquete"}</span></li>
           </ul>
 
           {relacionadas.length > 0 && (
             <div className="clp-more">
-              <span className="clp-more__k">Más Pilates {modLabel(clase.modalidad)}</span>
+              <span className="clp-more__k">Más de {familia}</span>
               <div className="clp-more__list">
                 {relacionadas.map((c) => <MiniClase key={c.slug} clase={c} />)}
               </div>

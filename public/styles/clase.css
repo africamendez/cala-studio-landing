@@ -145,7 +145,53 @@
   color: var(--ink-mute);
 }
 
+/* ── Página de paquete (#/paquete/<slug>) ─────────────────────────────
+   Columna visual: las clases que incluye, cada una con su velo y candado */
+.pq-incluye{
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center; gap: 16px;
+}
+.pq-list{
+  list-style: none;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px;
+}
+.pq-clase{ display: flex; flex-direction: column; gap: 10px; color: inherit; text-decoration: none; }
+a.pq-clase .pq-clase__thumb img{ transition: transform .35s ease; }
+a.pq-clase:hover .pq-clase__thumb img{ transform: scale(1.03); }
+.pq-clase__thumb{ border: 1px solid var(--line-soft); border-radius: 4px; }
+.pq-clase__body{ display: flex; flex-direction: column; gap: 3px; }
+.pq-clase__title{ font-size: 14px; font-weight: 500; color: var(--ink); }
+.pq-clase__meta{
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* Caja de compra (CompraPaquete): el formulario de cuenta reutiliza .ev-wl
+   de evento.css; aquí solo los enlaces secundarios y la contraseña */
+.pq-link{
+  align-self: flex-start; padding: 0;
+  font-size: 12px; color: var(--ink-soft);
+  text-decoration: underline; text-underline-offset: 3px;
+  transition: color .2s ease;
+}
+.pq-link:hover{ color: var(--ev-accent-deep); }
+.pq-links{ display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.pq-cuenta{
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  font-size: 12px; color: var(--ink-mute);
+}
+.pq-clave{ position: relative; flex: 1 1 100%; display: flex; }
+.pq-clave .ev-wl-f{ padding-right: 86px; }
+.pq-clave__ver{
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  padding: 8px 12px;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink-mute);
+}
+.pq-clave__ver:hover{ color: var(--ink); }
+
 @media (max-width: 900px){
   .clase-page{ grid-template-columns: 1fr; }
+  .pq-list{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .clp-visual{ min-height: auto; padding-bottom: clamp(24px, 5vw, 40px); }
 }

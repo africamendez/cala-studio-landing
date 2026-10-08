@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase.js";
 
-// Sesión + perfil del usuario. Login por "magic link" (sin contraseñas).
+// Sesión + perfil del usuario. Dos formas de entrar: email y contraseña (la
+// de los paquetes online, no depende de enviar emails) y "magic link".
 export function useAuth() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,11 @@ export function useAuth() {
       options: { emailRedirectTo: window.location.origin, data: { nombre, telefono } },
     });
 
+  // Cuenta con email y contraseña. Con "Confirm email" apagado en Supabase,
+  // crear la cuenta ya deja la sesión abierta, sin pasar por el correo.
+  const signUp = (email, password) => supabase.auth.signUp({ email, password });
+  const signIn = (email, password) => supabase.auth.signInWithPassword({ email, password });
+
   const saveProfile = async ({ nombre, telefono }) => {
     // Coge el usuario del cliente (recién verificado), no del estado del hook,
     // que puede no haberse propagado todavía tras verificar el código.
@@ -53,5 +59,5 @@ export function useAuth() {
   const isAdmin = !!(profile && profile.is_admin);
 
   return { user, session, loading, profile, profileComplete, isAdmin,
-           signInWithEmail, saveProfile, signOut };
+           signInWithEmail, signUp, signIn, saveProfile, signOut };
 }

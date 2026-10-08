@@ -32,3 +32,10 @@ export function thumbUrl(video) {
   if (v?.provider === "youtube") return `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
   return null;
 }
+
+// Portada de una clase: su `poster` (imagen propia) o, a falta de él, la
+// miniatura de su vídeo, que solo está a mano si la clase es de muestra o su
+// paquete está comprado (ver useAcceso).
+export function posterUrl(clase, video) {
+  return clase.poster || thumbUrl(video);
+}

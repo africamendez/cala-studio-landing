@@ -18,7 +18,7 @@ export default function ClasesPreview() {
       title={<>Empieza <em>ahora</em></>}
       right={<>
         Clases nuevas cada semana, por modalidad y nivel<br />
-        Las marcadas como gratis se ven sin cuenta
+        Cada clase forma parte de un paquete
       </>}
     >
       <div className="cl-strip">
