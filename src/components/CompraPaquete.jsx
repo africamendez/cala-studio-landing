@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase.js";
 import { useAcceso } from "../hooks/useAcceso.jsx";
-import { irAContacto, limpiarParametros } from "../lib/nav.js";
+import { limpiarParametros } from "../lib/nav.js";
+import { EMAIL_RE, CLAVE_MIN } from "../lib/cuenta.js";
 import MultiLine from "./MultiLine.jsx";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const CLAVE_MIN = 8;
+import PedirClave from "./PedirClave.jsx";
+import CampoClave from "./ui/CampoClave.jsx";
 
 function mensajeDe(err) {
   // Sin error pero sin sesión: Supabase está pidiendo confirmar el email
@@ -20,7 +20,8 @@ function mensajeDe(err) {
 // Caja de compra de la ficha de un paquete: precio y botón de pago (Stripe
 // Checkout). Para pagar hace falta cuenta, que se crea aquí mismo con email y
 // contraseña; la compra queda ligada a ella y abre el paquete en cualquier
-// dispositivo.
+// dispositivo. Quien olvida la contraseña pide desde aquí el enlace para
+// cambiarla (PedirClave).
 export default function CompraPaquete({ paquete, primeraClase }) {
   const { user, cargando, tiene, recargar, signUp, signIn, signOut } = useAcceso();
   const mio = tiene(paquete.slug);
@@ -32,12 +33,11 @@ export default function CompraPaquete({ paquete, primeraClase }) {
   });
   const [vuelta, setVuelta] = useState(vieneDePagar ? "confirmando" : null);   // confirmando | tarda | null
 
-  const [form, setForm]         = useState(null);   // null | { modo: "crear" | "entrar", pagar: boolean }
-  const [email, setEmail]       = useState("");
-  const [clave, setClave]       = useState("");
-  const [verClave, setVerClave] = useState(false);
-  const [busy, setBusy]         = useState(false);
-  const [error, setError]       = useState("");
+  const [form, setForm]   = useState(null);   // null | { modo: "crear" | "entrar" | "clave", pagar: boolean }
+  const [email, setEmail] = useState("");
+  const [clave, setClave] = useState("");
+  const [busy, setBusy]   = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => { limpiarParametros("pago", "paquete"); }, []);
 
@@ -154,7 +154,18 @@ export default function CompraPaquete({ paquete, primeraClase }) {
         />
       )}
 
-      {form && !user ? (
+      {form && !user && form.modo === "clave" ? (
+        <PedirClave
+          titulo="¿Contraseña olvidada?"
+          lede={"Te enviamos un enlace a tu email\nAl abrirlo eliges una contraseña nueva"}
+          emailInicial={email}
+          paquete={paquete.slug}
+        >
+          <button type="button" className="pq-link" onClick={() => abrir("entrar", form.pagar)}>
+            Volver a entrar
+          </button>
+        </PedirClave>
+      ) : form && !user ? (
         <form className="ev-wl" onSubmit={entrar}>
           <span className="ev-wl-title">{crear ? "Crea tu cuenta" : "Entra en tu cuenta"}</span>
           <MultiLine
@@ -166,15 +177,8 @@ export default function CompraPaquete({ paquete, primeraClase }) {
           <div className="ev-wl-fields">
             <input className="ev-wl-f wide" type="email" inputMode="email" placeholder="Email"
                    autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} />
-            <span className="pq-clave">
-              <input className="ev-wl-f" type={verClave ? "text" : "password"}
-                     placeholder={crear ? `Contraseña · mínimo ${CLAVE_MIN} caracteres` : "Contraseña"}
-                     autoComplete={crear ? "new-password" : "current-password"}
-                     value={clave} onChange={e => setClave(e.target.value)} />
-              <button type="button" className="pq-clave__ver" onClick={() => setVerClave(v => !v)}>
-                {verClave ? "Ocultar" : "Ver"}
-              </button>
-            </span>
+            <CampoClave nueva={crear} value={clave} onChange={setClave}
+                        placeholder={crear ? `Contraseña · mínimo ${CLAVE_MIN} caracteres` : "Contraseña"} />
           </div>
           <button className="ev-wl-b" disabled={!listo || busy}>
             {busy ? "…" : form.pagar ? "Continuar al pago" : "Entrar"}
@@ -185,9 +189,9 @@ export default function CompraPaquete({ paquete, primeraClase }) {
               {crear ? "Ya tengo cuenta" : "Crear una cuenta nueva"}
             </button>
             {!crear && (
-              <a href="#contacto" className="pq-link" onClick={e => { e.preventDefault(); irAContacto("cuenta"); }}>
-                ¿Contraseña olvidada? Escríbenos
-              </a>
+              <button type="button" className="pq-link" onClick={() => abrir("clave", form.pagar)}>
+                ¿Contraseña olvidada?
+              </button>
             )}
           </div>
         </form>

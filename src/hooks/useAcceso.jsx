@@ -12,7 +12,7 @@ import { useAuth } from "./useAuth.js";
 const AccesoContext = createContext(null);
 
 export function AccesoProvider({ children }) {
-  const { user, loading: cargandoSesion, signUp, signIn, signOut } = useAuth();
+  const { user, loading: cargandoSesion, signUp, signIn, pedirClave, cambiarClave, signOut } = useAuth();
   const uid = user?.id ?? null;
   const [paquetes, setPaquetes] = useState(() => new Set());
   const [videos, setVideos] = useState({});                // slug de clase → su vídeo
@@ -62,7 +62,8 @@ export function AccesoProvider({ children }) {
   const videoDe = (clase) => clase.video ?? videos[clase.slug] ?? null;
 
   return (
-    <AccesoContext.Provider value={{ user, cargando, tiene, bloqueada, videoDe, recargar, signUp, signIn, signOut }}>
+    <AccesoContext.Provider value={{ user, cargando, tiene, bloqueada, videoDe, recargar,
+                                     signUp, signIn, pedirClave, cambiarClave, signOut }}>
       {children}
     </AccesoContext.Provider>
   );

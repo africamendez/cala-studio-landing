@@ -190,6 +190,23 @@ a.pq-clase:hover .pq-clase__thumb img{ transform: scale(1.03); }
 }
 .pq-clave__ver:hover{ color: var(--ink); }
 
+/* Contraseña nueva (ClavePage): a donde devuelve el enlace del email. La marca
+   arriba y, centrada, una sola columna con el mismo formulario .ev-wl */
+.clave-page{
+  --ev-accent: var(--blue);
+  --ev-accent-deep: var(--blue-deep);
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: clamp(20px, 3vw, 44px) clamp(22px, 5vw, 60px) clamp(40px, 8vw, 80px);
+  background: #FBFAF8;
+}
+.clave-page__brand{ align-self: flex-start; }
+.clave-page__in{
+  width: 100%; max-width: 420px; margin: auto 0;
+  padding: clamp(28px, 6vw, 44px) 0;
+  display: flex; flex-direction: column; gap: 26px;
+}
+
 @media (max-width: 900px){
   .clase-page{ grid-template-columns: 1fr; }
   .pq-list{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

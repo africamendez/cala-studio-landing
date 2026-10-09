@@ -156,6 +156,30 @@ En la web se cobran dos cosas, las dos con tarjeta en **Stripe Checkout**:
    supabase functions deploy pagos --no-verify-jwt
    ```
 
+### Contraseña olvidada: el único correo que envía la web
+Quien no recuerda su contraseña pulsa *¿Contraseña olvidada?* en la ficha de un paquete, recibe un
+enlace por email y, al abrirlo, elige una nueva en la propia web. Hacen falta dos ajustes en Supabase:
+1. **A dónde vuelve el enlace** — **Authentication → URL Configuration**: en *Site URL*, la dirección
+   de la web publicada; en *Redirect URLs*, `http://localhost:5173/**` para probar en local (y cualquier
+   otra dirección desde la que se use la web, acabada igual en `/**`). Una dirección que no esté ahí no
+   vale: el enlace del correo acaba en la *Site URL* aunque se haya pedido desde otro sitio.
+2. **Quién envía el correo** — el que trae Supabase de serie solo escribe a las personas de tu equipo
+   en Supabase, y un par de mensajes por hora: sirve para probarlo contigo, no para clientas. Para
+   ellas, **Authentication → Emails → SMTP Settings** → *Enable custom SMTP*. No hace falta dominio
+   propio, vale una cuenta de Gmail:
+   - *Host* `smtp.gmail.com` · *Port* `465`
+   - *Username* y *Sender email*: la dirección de Gmail
+   - *Password*: una **contraseña de aplicación** de Google, no la normal de la cuenta. Se crea en
+     <https://myaccount.google.com/apppasswords> (pide tener activada la verificación en dos pasos)
+
+   Gmail deja enviar unos 500 correos al día, de sobra para esto.
+
+El correo sale con el texto de Supabase, en inglés. Se cambia en **Authentication → Emails → Reset
+Password**; lo único que hay que conservar es el enlace `{{ .ConfirmationURL }}`.
+
+Mientras el paso 2 no esté hecho, a quien pida el enlace la web le dice que escriba por el formulario,
+y la contraseña se le cambia a mano (ver *Día a día*).
+
 ### Cómo funciona
 - Los botones *Comprar paquete* y *Reservar plaza* llaman a la función `pagos`, que apunta la
   operación como `pendiente` y devuelve la página de pago de Stripe. El importe sale siempre del
@@ -206,8 +230,8 @@ En la web se cobran dos cosas, las dos con tarjeta en **Stripe Checkout**:
 - **Devolver una plaza:** devuelve el dinero desde Stripe y quita a la persona de la lista en
   `#/gestion` (eso libera la plaza). Para dejar constancia:
   `update public.evento_reservas set estado = 'reembolsado' where stripe_payment_intent = 'pi_…';`
-- **Contraseña olvidada:** sin correo propio no hay "recuperar contraseña"; se cambia a mano y se
-  le dice la nueva a la clienta:
+- **Contraseña olvidada:** la cambia ella sola desde *¿Contraseña olvidada?* (ver más arriba). Si el
+  correo no le llega o ya no usa esa dirección, se cambia a mano y se le dice la nueva:
   ```sql
   update auth.users
      set encrypted_password = extensions.crypt('ContraseñaNueva', extensions.gen_salt('bf'))

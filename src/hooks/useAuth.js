@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase.js";
 
 // Sesión + perfil del usuario. Dos formas de entrar: email y contraseña (la
-// de los paquetes online, no depende de enviar emails) y "magic link".
+// de los paquetes online; solo envía un email si se olvida la contraseña) y
+// "magic link".
 export function useAuth() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,16 @@ export function useAuth() {
   const signUp = (email, password) => supabase.auth.signUp({ email, password });
   const signIn = (email, password) => supabase.auth.signInWithPassword({ email, password });
 
+  // Contraseña olvidada: el único correo que envía la cuenta. Lleva un enlace de
+  // un solo uso que devuelve a la web con la sesión abierta, y ahí se elige la
+  // nueva (ClavePage). `paquete` es la ficha desde la que se pide, para volver
+  // a ella al terminar.
+  const pedirClave = (email, paquete) =>
+    supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + (paquete ? `/?paquete=${encodeURIComponent(paquete)}` : ""),
+    });
+  const cambiarClave = (password) => supabase.auth.updateUser({ password });
+
   const saveProfile = async ({ nombre, telefono }) => {
     // Coge el usuario del cliente (recién verificado), no del estado del hook,
     // que puede no haberse propagado todavía tras verificar el código.
@@ -59,5 +70,5 @@ export function useAuth() {
   const isAdmin = !!(profile && profile.is_admin);
 
   return { user, session, loading, profile, profileComplete, isAdmin,
-           signInWithEmail, signUp, signIn, saveProfile, signOut };
+           signInWithEmail, signUp, signIn, pedirClave, cambiarClave, saveProfile, signOut };
 }

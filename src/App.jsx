@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SUMMER_MODE } from "./config.js";
+import { enlaceClave } from "./lib/supabase.js";
 import { useMobile } from "./hooks/useMobile.js";
 import Nav from "./components/Nav.jsx";
 import Hero from "./components/Hero.jsx";
@@ -16,6 +17,7 @@ import GestionPage from "./components/GestionPage.jsx";
 import ClasesPage from "./components/ClasesPage.jsx";
 import ClasePage from "./components/ClasePage.jsx";
 import PaquetePage from "./components/PaquetePage.jsx";
+import ClavePage from "./components/ClavePage.jsx";
 import MobileTopBar from "./components/MobileTopBar.jsx";
 import MobileNav from "./components/MobileNav.jsx";
 
@@ -26,12 +28,19 @@ function useHashRoute() {
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, []);
-  return hash;
+  // Cambia de página en el mismo render, sin esperar al hashchange
+  const ir = useCallback((h) => { window.location.hash = h; setHash(window.location.hash); }, []);
+  return [hash, ir];
 }
 
 export default function App() {
   const mobile = useMobile();
-  const hash = useHashRoute();
+  const [hash, ir] = useHashRoute();
+  const [clave, setClave] = useState(enlaceClave);   // "valido" | "caducado" | null
+
+  // Vuelta del enlace de "contraseña olvidada": va antes que cualquier página,
+  // porque llega a la raíz y sin ruta (el hash lo ocupan las llaves de sesión)
+  if (clave) return <ClavePage enlace={clave} onFin={(destino) => { ir(destino); setClave(null); }} />;
 
   // Biblioteca de clases online (#/clases y #/clases/<modalidad>)
   if (hash.startsWith("#/clases")) {
