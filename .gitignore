@@ -8,3 +8,6 @@ dist
 .env.local
 supabase/.temp
 supabase/.branches
+
+# Capturas de referencia de diseño: son de trabajo, no van al repositorio ni a la web
+public/assets/referencias/
