@@ -57,8 +57,7 @@
 }
 .clp-locked__veil{
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(20,26,32,.72), rgba(20,26,32,.9));
-  backdrop-filter: blur(3px);
+  background: rgba(18,17,16,.62);
 }
 .clp-locked__in{
   position: relative;

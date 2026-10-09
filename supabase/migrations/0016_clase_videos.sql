@@ -40,23 +40,24 @@ grant select on public.clase_videos to authenticated;
 grant all on public.clase_videos to service_role;
 
 -- ⚠️ Vídeos de EJEMPLO (públicos, de relleno) para probar la compra de punta a
--- punta. Los de verdad NO se escriben en este archivo —el repositorio lo lee
--- cualquiera que tenga acceso a él—: se ponen desde el panel de Supabase
--- (Table Editor → clase_videos) o en el SQL Editor:
+-- punta: todos del mismo canal, para que la imagen sea uniforme. Los de verdad
+-- NO se escriben en este archivo —el repositorio lo lee cualquiera que tenga
+-- acceso a él—: se ponen desde el panel de Supabase (Table Editor →
+-- clase_videos) o en el SQL Editor:
 --   update public.clase_videos set video_id = 'ID-REAL' where clase = 'mat-suelo-y-respiracion';
 insert into public.clase_videos (clase, paquete, video_id) values
-  ('mat-suelo-y-respiracion',             'mat-i',         'ZXsQAXx_ao0'),
-  ('mat-abdomen-profundo',                'mat-i',         'v7AYKMP6rOE'),
-  ('flow-movilidad-de-manana',            'flow-i',        'inpok4MKVLM'),
-  ('flow-cadena-completa',                'flow-i',        '2OEL4P1Rz04'),
-  ('sculpt-piernas-y-gluteo',             'sculpt-i',      'gC_L9qAHVJ8'),
-  ('sculpt-tren-superior',                'sculpt-i',      '1ZYbU82GVz4'),
-  ('premama-respiracion-y-suelo-pelvico', 'premama',       'ZXsQAXx_ao0'),
-  ('premama-cadera-y-espalda',            'premama',       'inpok4MKVLM'),
-  ('premama-fuerza-amable',               'premama',       'gC_L9qAHVJ8'),
-  ('postparto-reconectar-el-centro',      'postparto',     'v7AYKMP6rOE'),
-  ('postparto-postura-y-espalda',         'postparto',     '2OEL4P1Rz04'),
-  ('postparto-vuelta-a-la-fuerza',        'postparto',     '1ZYbU82GVz4'),
-  ('animal-flow-posiciones-base',         'animal-flow-i', 'gC_L9qAHVJ8'),
-  ('animal-flow-primer-flow',             'animal-flow-i', 'inpok4MKVLM')
+  ('mat-suelo-y-respiracion',              'mat-i',         'NyP_waVgL1w'),
+  ('mat-abdomen-profundo',                 'mat-i',         'dYcNLMwwlMA'),
+  ('flow-movilidad-de-manana',             'flow-i',        'u5QbMDvSK3w'),
+  ('flow-cadena-completa',                 'flow-i',        '7SU59GxGqbo'),
+  ('sculpt-piernas-y-gluteo',              'sculpt-i',      'bn8f3EAS0UQ'),
+  ('sculpt-tren-superior',                 'sculpt-i',      'ta_k5QZLkfk'),
+  ('premama-respiracion-y-suelo-pelvico',  'premama',       'D2d7zi6ya58'),
+  ('premama-cadera-y-espalda',             'premama',       'HIuJA4xS4WM'),
+  ('premama-fuerza-amable',                'premama',       'Xs6gah4DseA'),
+  ('postparto-reconectar-el-centro',       'postparto',     'y2RcYo36boM'),
+  ('postparto-postura-y-espalda',          'postparto',     'imWc_27U9w8'),
+  ('postparto-vuelta-a-la-fuerza',         'postparto',     'wtVyZmHnlxM'),
+  ('animal-flow-posiciones-base',          'animal-flow-i', '8cltCOUpYTQ'),
+  ('animal-flow-primer-flow',              'animal-flow-i', '6Iuh2_kk1d8')
 on conflict (clase) do nothing;

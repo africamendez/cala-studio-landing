@@ -138,13 +138,19 @@ export function getPaquete(slug) {
 //   video: { provider: "youtube", id: "dQw4w9WgXcQ" }
 //   video: { provider: "vimeo",   id: "76979871" }
 //
-// `poster` (opcional): imagen propia para la tarjeta, p. ej.
-// "assets/clases/mat-suelo-y-respiracion.jpg". Sin ella, la clase bloqueada
-// sale con el marcador liso: la miniatura de YouTube lleva el ID del vídeo en
-// su dirección, así que no se le puede enseñar a quien no lo ha comprado.
+// `poster`: la portada de la clase, una imagen propia en public/assets/clases/
+// (16:9, mejor de unos 960 px de ancho). Es lo que se ve en su tarjeta, esté
+// bloqueada (con un negro translúcido y el candado encima) o ya comprada. La
+// miniatura de YouTube no sirve de portada: lleva el ID del vídeo en su
+// dirección, así que no se le puede enseñar a quien no lo ha comprado. Sin
+// `poster`, la tarjeta sale en negro liso.
+//
+// ⚠️ Las portadas de ahora son recortes PROVISIONALES de las fotos de la web:
+// cámbialas por la imagen de cada clase.
 export const CLASES = [
   {
     slug: "mat-suelo-y-respiracion",
+    poster: "assets/clases/mat-suelo-y-respiracion.jpg",
     modalidad: "mat",
     paquete: "mat-i",
     nivel: "basico",
@@ -156,6 +162,7 @@ export const CLASES = [
   },
   {
     slug: "mat-abdomen-profundo",
+    poster: "assets/clases/mat-abdomen-profundo.jpg",
     modalidad: "mat",
     paquete: "mat-i",
     nivel: "intermedio",
@@ -167,6 +174,7 @@ export const CLASES = [
   },
   {
     slug: "flow-movilidad-de-manana",
+    poster: "assets/clases/flow-movilidad-de-manana.jpg",
     modalidad: "flow",
     paquete: "flow-i",
     nivel: "basico",
@@ -178,6 +186,7 @@ export const CLASES = [
   },
   {
     slug: "flow-cadena-completa",
+    poster: "assets/clases/flow-cadena-completa.jpg",
     modalidad: "flow",
     paquete: "flow-i",
     nivel: "avanzado",
@@ -189,6 +198,7 @@ export const CLASES = [
   },
   {
     slug: "sculpt-piernas-y-gluteo",
+    poster: "assets/clases/sculpt-piernas-y-gluteo.jpg",
     modalidad: "sculpt",
     paquete: "sculpt-i",
     nivel: "intermedio",
@@ -200,6 +210,7 @@ export const CLASES = [
   },
   {
     slug: "sculpt-tren-superior",
+    poster: "assets/clases/sculpt-tren-superior.jpg",
     modalidad: "sculpt",
     paquete: "sculpt-i",
     nivel: "avanzado",
@@ -211,6 +222,7 @@ export const CLASES = [
   },
   {
     slug: "premama-respiracion-y-suelo-pelvico",
+    poster: "assets/clases/premama-respiracion-y-suelo-pelvico.jpg",
     modalidad: "mat",
     paquete: "premama",
     nivel: "basico",
@@ -222,6 +234,7 @@ export const CLASES = [
   },
   {
     slug: "premama-cadera-y-espalda",
+    poster: "assets/clases/premama-cadera-y-espalda.jpg",
     modalidad: "mat",
     paquete: "premama",
     nivel: "basico",
@@ -233,6 +246,7 @@ export const CLASES = [
   },
   {
     slug: "premama-fuerza-amable",
+    poster: "assets/clases/premama-fuerza-amable.jpg",
     modalidad: "mat",
     paquete: "premama",
     nivel: "intermedio",
@@ -244,6 +258,7 @@ export const CLASES = [
   },
   {
     slug: "postparto-reconectar-el-centro",
+    poster: "assets/clases/postparto-reconectar-el-centro.jpg",
     modalidad: "mat",
     paquete: "postparto",
     nivel: "basico",
@@ -255,6 +270,7 @@ export const CLASES = [
   },
   {
     slug: "postparto-postura-y-espalda",
+    poster: "assets/clases/postparto-postura-y-espalda.jpg",
     modalidad: "mat",
     paquete: "postparto",
     nivel: "basico",
@@ -266,6 +282,7 @@ export const CLASES = [
   },
   {
     slug: "postparto-vuelta-a-la-fuerza",
+    poster: "assets/clases/postparto-vuelta-a-la-fuerza.jpg",
     modalidad: "mat",
     paquete: "postparto",
     nivel: "intermedio",
@@ -277,6 +294,7 @@ export const CLASES = [
   },
   {
     slug: "animal-flow-posiciones-base",
+    poster: "assets/clases/animal-flow-posiciones-base.jpg",
     paquete: "animal-flow-i",
     nivel: "basico",
     titulo: "Posiciones base",
@@ -287,6 +305,7 @@ export const CLASES = [
   },
   {
     slug: "animal-flow-primer-flow",
+    poster: "assets/clases/animal-flow-primer-flow.jpg",
     paquete: "animal-flow-i",
     nivel: "intermedio",
     titulo: "Primer flow",

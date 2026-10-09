@@ -47,7 +47,7 @@
   position: relative;
   aspect-ratio: 16 / 9;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(180deg, var(--bg-2), #EAE8E3);
+  background: var(--ink);                  /* sin portada: negro liso, nunca un hueco gris */
   border-bottom: 1px solid var(--line-soft);
   overflow: hidden;
 }
@@ -56,12 +56,6 @@
   transition: transform .35s ease;
 }
 .cl-card:hover .cl-card__thumb img{ transform: scale(1.03); }
-.cl-card__thumb-ph{
-  padding: 16px; text-align: center;
-  font-weight: 200; font-size: 20px; line-height: 1.1;
-  text-transform: uppercase; letter-spacing: -.01em;
-  color: var(--ink-soft);
-}
 .cl-card__badge{
   position: absolute; left: 10px; bottom: 10px;
   display: inline-flex; align-items: center; gap: 6px;
@@ -73,32 +67,39 @@
 .cl-card__badge svg{ width: 12px; height: 12px; }
 .cl-card__badge.is-free{ background: rgba(255,255,255,.92); color: var(--ink); }
 
-/* Clase bloqueada — velo que desvanece la miniatura + candado centrado */
-.cl-card__thumb.is-locked img{ filter: saturate(.55); }
+/* Clase bloqueada — la portada, un negro translúcido encima y el candado */
 .cl-card__lock{
   position: absolute; inset: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  background: linear-gradient(180deg, rgba(251,250,248,.5), rgba(251,250,248,.88));
-  color: var(--ink);
+  background: rgba(18,17,16,.52);
+  color: #fff;
   transition: background .3s ease;
 }
-.cl-card:hover .cl-card__lock{
-  background: linear-gradient(180deg, rgba(251,250,248,.38), rgba(251,250,248,.8));
-}
-.cl-card__lock-ic{
-  width: 42px; height: 42px;
+.cl-card:hover .cl-card__lock{ background: rgba(18,17,16,.4); }
+.cl-card__lock-ic,
+.cl-card__play{
+  width: 46px; height: 46px;
   display: grid; place-items: center;
   border-radius: 50%;
-  background: rgba(255,255,255,.9);
-  border: 1px solid var(--line);
-  box-shadow: 0 10px 24px -14px rgba(0,0,0,.4);
-  transition: transform .3s ease, background .3s ease, color .3s ease;
+  transition: transform .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
 }
-.cl-card__lock-ic svg{ width: 18px; height: 18px; }
-.cl-card:hover .cl-card__lock-ic{ transform: scale(1.06); background: var(--ink); color: #fff; }
+.cl-card__lock-ic{ border: 1px solid rgba(255,255,255,.8); }
+.cl-card__lock-ic svg{ width: 19px; height: 19px; }
+.cl-card:hover .cl-card__lock-ic{ background: #fff; border-color: #fff; color: var(--ink); }
 .cl-card__lock-k{
-  font-size: 9px; letter-spacing: .24em; text-transform: uppercase; font-weight: 700;
+  font-size: 9px; letter-spacing: .26em; text-transform: uppercase; font-weight: 700;
 }
+
+/* Clase abierta — la portada limpia y el play */
+.cl-card__play{
+  position: absolute; left: 50%; top: 50%;
+  margin: -23px 0 0 -23px;
+  background: #fff; color: var(--ink);
+  box-shadow: 0 10px 24px -12px rgba(0,0,0,.55);
+}
+.cl-card__play svg{ width: 19px; height: 19px; }
+.cl-card:hover .cl-card__play,
+a.pq-clase:hover .cl-card__play{ transform: scale(1.08); }
 
 .cl-card__body{
   flex: 1;
@@ -226,5 +227,11 @@
   .cl-grid{ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .cl-card__title{ font-size: 17px; }
   .cl-card__body{ padding: 13px 13px 15px; }
-  .cl-card__lock-ic{ width: 36px; height: 36px; }
+  .cl-card__lock{ gap: 7px; }
+  .cl-card__lock-ic,
+  .cl-card__play{ width: 38px; height: 38px; }
+  .cl-card__play{ margin: -19px 0 0 -19px; }
+  .cl-card__lock-ic svg,
+  .cl-card__play svg{ width: 16px; height: 16px; }
+  .cl-card__lock-k{ font-size: 8px; letter-spacing: .2em; }
 }

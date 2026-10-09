@@ -10,8 +10,9 @@ import LockIcon from "./ui/LockIcon.jsx";
 
 const nivLabel = (slug) => NIVELES.find((n) => n.slug === slug)?.label || slug;
 
-// Clase incluida en el paquete. Bloqueada: miniatura con velo y candado, sin
-// enlace. Con el paquete comprado, la miniatura limpia lleva a su reproductor.
+// Clase incluida en el paquete. Bloqueada: su portada con un negro translúcido
+// y el candado, sin enlace. Con el paquete comprado, la portada limpia con el
+// play lleva a su reproductor.
 function ClaseIncluida({ clase, bloqueada }) {
   const { videoDe } = useAcceso();
   const thumb = posterUrl(clase, videoDe(clase));
@@ -19,9 +20,13 @@ function ClaseIncluida({ clase, bloqueada }) {
     <>
       <span className={"cl-card__thumb pq-clase__thumb" + (bloqueada ? " is-locked" : "")}>
         {thumb && <img src={thumb} alt="" loading="lazy" />}
-        {bloqueada && (
+        {bloqueada ? (
           <span className="cl-card__lock">
             <span className="cl-card__lock-ic"><LockIcon /></span>
+          </span>
+        ) : (
+          <span className="cl-card__play">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 6.5v11l9-5.5z" /></svg>
           </span>
         )}
       </span>

@@ -10,36 +10,39 @@ const nivLabel = (slug) => NIVELES.find((n) => n.slug === slug)?.label || slug;
 function PlayIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M8 5v14l11-7z" />
+      <path d="M9 6.5v11l9-5.5z" />
     </svg>
   );
 }
 
 // Tarjeta de clase — la comparten la tira de la home y la biblioteca (#/clases).
-// Bloqueada: velo + candado sobre la miniatura, y el clic lleva a su paquete.
-// Abierta (de muestra, o de un paquete comprado): lleva a su reproductor.
+// La imagen es siempre la portada de la clase (`poster`).
+// Bloqueada: un negro translúcido y el candado encima; el clic lleva a su paquete.
+// Abierta (de muestra, o de un paquete comprado): la portada limpia con el
+// play; lleva a su reproductor.
 export default function ClaseCard({ clase }) {
   const [thumbOk, setThumbOk] = useState(true);
   const { bloqueada, videoDe } = useAcceso();
   const thumb = posterUrl(clase, videoDe(clase));
+  const conImagen = !!thumb && thumbOk;
   const locked = bloqueada(clase);
   const paquete = getPaquete(clase.paquete);
+  const etiqueta = paquete ? "Ver paquete" : "Bloqueada";
 
   return (
     <a className="cl-card" href={claseHref(clase, locked)}>
       <span className={"cl-card__thumb" + (locked ? " is-locked" : "")}>
-        {thumb && thumbOk ? (
-          <img src={thumb} alt="" loading="lazy" onError={() => setThumbOk(false)} />
-        ) : !locked && (
-          <span className="cl-card__thumb-ph">{clase.titulo}</span>
-        )}
+        {conImagen && <img src={thumb} alt="" loading="lazy" onError={() => setThumbOk(false)} />}
         {locked ? (
           <span className="cl-card__lock">
             <span className="cl-card__lock-ic"><LockIcon /></span>
-            <span className="cl-card__lock-k">{paquete ? "Ver paquete" : "Bloqueada"}</span>
+            <span className="cl-card__lock-k">{etiqueta}</span>
           </span>
         ) : (
-          <span className="cl-card__badge is-free"><PlayIcon /> {clase.gratis ? "Gratis" : "Tuya"}</span>
+          <>
+            <span className="cl-card__play"><PlayIcon /></span>
+            {clase.gratis && <span className="cl-card__badge is-free">Gratis</span>}
+          </>
         )}
       </span>
 

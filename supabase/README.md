@@ -218,9 +218,13 @@ y la contraseña se le cambia a mano (ver *Día a día*).
   ```
   Los IDs de verdad no se escriben en ningún archivo del repositorio: lo lee cualquiera que tenga
   acceso a él. Mientras a una clase le falte su fila, quien la ha comprado ve «Vídeo en camino».
-- **Portadas:** una clase bloqueada no puede enseñar la miniatura de YouTube (su dirección lleva el ID
-  del vídeo), así que sale con el fondo liso y el candado. Para darle imagen propia, guarda una en
-  `public/assets/` y ponla en el campo `poster` de su ficha (`src/data.js`).
+- **Portadas:** cada clase lleva su imagen en el campo `poster` de su ficha (`src/data.js`), guardada en
+  `public/assets/clases/` (16:9, de unos 960 px de ancho). Es lo que se ve en su tarjeta: con un negro
+  translúcido y el candado mientras está bloqueada, y limpia con el play cuando ya es suya. La miniatura de
+  YouTube no sirve de portada, porque su dirección lleva el ID del vídeo. Las de ahora son recortes
+  provisionales de las fotos de la web: cámbialas por la imagen de cada clase.
+- **Vídeos de ejemplo:** los de relleno están en `0016_clase_videos.sql`. En una base donde esa migración
+  ya se ejecutó con los antiguos, `ejemplo_videos.sql` los pone al día sin tocar los que ya hayas cambiado.
 - **Evento de pago nuevo:** su sesión en el calendario y su ficha como siempre (ver *Eventos*), más
   su precio en `EVENTOS_PRECIO` (`functions/_shared/catalogo.js`), con el mismo slug. Y redespliega.
 - **Ventas:** el dinero se ve en Stripe (*Payments*); `compras` dice quién tiene abierto qué, y
